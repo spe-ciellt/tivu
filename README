@@ -1,0 +1,27 @@
+
+This is the README file of the tivu program
+
+Copyright (c) 2010-2012, Ciellt/Stefan Petersen (spe@ciellt.se)
+
+tivu is short for Test Instrument Viewer. The intention is to
+be a printer for testinstrument printing out in the HP PCL language.
+
+It is from the very begining only made to support me (spe) and my
+test instrument  (HP E8285A), but I am sure it should be able to
+support more instrument.
+
+The code is written in Python using wx as graphical interface and pyserial
+for serial communication. The code is released under the "New BSD" license.
+
+The user interface for the program is built using wxglade. To generate
+the tivuGUI.py file from from tivu.wxg, use make. the make program calls
+wxglade to generate the tivuGUI.py file.
+
+- python directory contains the python sourcecode of the actual implementation.
+ -src directory contains an SDL implementation that takes a dumped file as
+an argument.
+- dump-prog contains program that dumps the data from the instrument to a file
+to be used as a reference when developing.
+- samples directory contains samples from my HP E8285A
+- doc contains some PCL documentation files
+
