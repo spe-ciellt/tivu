@@ -38,7 +38,8 @@
 CC=gcc
 
 CFLAGS=-Wall `pkg-config --cflags sdl`
-LDFLAGS=`pkg-config --libs sdl`
+LDFLAGS=
+LDLIBS=`pkg-config --libs sdl`
 
 pcl-display : pcl-display.o
 
