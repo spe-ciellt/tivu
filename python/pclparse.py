@@ -40,7 +40,7 @@ class pclparse:
     def __init__(self):
         self.data = []
         self.string = ''
-        self.pclre = re.compile('(\033[*\&][tkrb]\w*[WRAB])')
+        self.pclre = re.compile('((\033[*\&][tkrb])(\d*)([WRAB]))')
         self.state = 'STATE_IDLE'
         self.row = 0
 
