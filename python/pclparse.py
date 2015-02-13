@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     ## Test of parser (streaming type)
     pcl = pclparse()
-    fd = open('../samples/foo.txt', 'rb')
+    fd = open('../samples/HP-E8285A/rx-test.txt', 'rb')
     while True:
         data = fd.read(100)
         if len(data) == 0:
@@ -92,8 +92,4 @@ if __name__ == '__main__':
         pcl.parse(data)
     fd.close()
 
-    if  len(pcl.data) != 276:
-        print 'Wrong number of rows when streaming: %d ' % (len(pcl.data))
-    for row in pcl.data:
-        if len(row) != 64:
-            print 'Wrong length of rows when streaming'
+    print("Image: %dx%d" % (len(pcl.data[0] * 8), len(pcl.data)))
