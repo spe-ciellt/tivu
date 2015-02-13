@@ -46,6 +46,20 @@ class pclparse:
         self.rowlen = 0
 
 
+    def width(self):
+        """
+        Returns the width of the image in pixels.
+        """
+        return len(self.data[0]) * 8
+
+
+    def height(self):
+        """
+        Returns the height of the image in pixels.
+        """
+        return len(self.data)
+
+
     def parse(self, string):
         self.string = ''.join([self.string, string])
         done = False
@@ -94,7 +108,7 @@ if __name__ == '__main__':
             break
         pcl.parse(data)
     fd.close()
-    print("Image size (E8285A): %dx%d" % (len(pcl.data[0] * 8), len(pcl.data)))
+    print("Image size (E8285A): %dx%d" % (pcl.width(), pcl.height()))
 
     ## Test of parser (streaming type)
     pcl = pclparse()
@@ -106,4 +120,4 @@ if __name__ == '__main__':
         pcl.parse(data)
     fd.close()
 
-    print("Image size (8752A): %dx%d" % (len(pcl.data[0] * 8), len(pcl.data)))
+    print("Image size (8752A): %dx%d" %  (pcl.width(), pcl.height()))
