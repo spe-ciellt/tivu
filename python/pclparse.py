@@ -43,38 +43,41 @@ class pclparse:
         self.pclre = re.compile('((\033[*\&][tkrb])(\d*)([WRAB]))')
         self.state = 'STATE_IDLE'
         self.row = 0
+        self.rowlen = 0
 
 
     def parse(self, string):
         self.string = ''.join([self.string, string])
         done = False
-        
+
         while not done:
             done = True
-            if self.state ==  'STATE_GRAPHICS_DATA' and len(self.string) >= 64:
-                data = map(ord, list(self.string[0:64]))
+            if self.state ==  'STATE_GRAPHICS_DATA' and \
+              len(self.string) >= self.rowlen:
+                data = map(ord, list(self.string[0:self.rowlen]))
                 self.data.append(data)
-                self.string = self.string[64:]
+                self.string = self.string[self.rowlen:]
                 done = False
                 self.state = 'STATE_GRAPHICS'
 
             hits = re.search(self.pclre, self.string)
             if hits:
-                txtblk =  hits.groups()[0]
+                txtblk = ''.join([hits.groups()[1], hits.groups()[3]])
                 self.string = self.string[hits.end():]
                 done = False
-                if txtblk == '\033*r0A':
+                if txtblk == '\033*rA':
                     # print 'Start graphics'
                     self.state = 'STATE_GRAPHICS'
                 elif txtblk == '\033*rB':
                     # print 'End Graphics'
                     self.state = 'STATE_IDLE'
-                elif self.state ==  'STATE_GRAPHICS' and txtblk == '\033*b64W':
+                elif self.state == 'STATE_GRAPHICS' and txtblk == '\033*bW':
                     # print 'Graphics Data'
                     self.state = 'STATE_GRAPHICS_DATA'
+                    self.rowlen = int(hits.groups()[2])
                 elif len(txtblk) > 0 and txtblk[0] == '\033':
-                    pass
                     # print 'Unhandled %s' % (txtblk[1:])
+                    pass
                 else:
                     # print 'Length: ' + str(len(txtblk))
                     pass
@@ -91,5 +94,16 @@ if __name__ == '__main__':
             break
         pcl.parse(data)
     fd.close()
+    print("Image size (E8285A): %dx%d" % (len(pcl.data[0] * 8), len(pcl.data)))
 
-    print("Image: %dx%d" % (len(pcl.data[0] * 8), len(pcl.data)))
+    ## Test of parser (streaming type)
+    pcl = pclparse()
+    fd = open('../samples/HP-8752A/dump-pcl-8752.txt', 'rb')
+    while True:
+        data = fd.read(100)
+        if len(data) == 0:
+            break
+        pcl.parse(data)
+    fd.close()
+
+    print("Image size (8752A): %dx%d" % (len(pcl.data[0] * 8), len(pcl.data)))
